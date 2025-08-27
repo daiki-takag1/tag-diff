@@ -14,9 +14,28 @@ export async function main() {
     repo: context.repo.repo,
   });
 
-  core.setOutput("latest_release_tag", response.data.tag_name);
+  const latestReleaseTag = response.data.tag_name;
 
-  console.log(response.data.tag_name);
+  core.setOutput("latest_release_tag", latestReleaseTag);
+
+  const currentBranch = context.ref;
+
+  const diffResponse = await github.rest.repos.compareCommitsWithBasehead({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    basehead: `${currentBranch}...${latestReleaseTag}`,
+  });
+
+  const diffFiles = diffResponse.data.files;
+
+  if (!diffFiles) {
+    core.setOutput("diff", []);
+    return;
+  }
+
+  for (const file of diffFiles) {
+    core.setOutput("diff", file.filename);
+  }
 }
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
