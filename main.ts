@@ -1,5 +1,4 @@
 import { getOctokit, context } from "npm:@actions/github";
-import core from "npm:@actions/core";
 
 export async function main() {
   const githubToken = Deno.env.get("GH_TOKEN");
@@ -9,35 +8,20 @@ export async function main() {
 
   const github = getOctokit(githubToken);
 
-  const response = await github.rest.repos.getLatestRelease({
+
+  const latestRelease = await github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
     repo: context.repo.repo,
   });
 
-  const latestReleaseTag = response.data.tag_name;
-
-  core.setOutput("latest_release_tag", latestReleaseTag);
-
-  const currentBranch = context.ref;
-
-  const diffResponse = await github.rest.repos.compareCommitsWithBasehead({
+  await github.rest.repos.merge({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    basehead: `${currentBranch}...${latestReleaseTag}`,
+    base: "production",
+    head: context.sha,
+    commit_message: `release: ${latestRelease.data.tag_name} : ${latestRelease.data.name}`,
+    merge_method: "merge",
   });
-
-  const diffFiles = diffResponse.data.files;
-
-  console.log(diffFiles);
-
-  if (!diffFiles) {
-    core.setOutput("diff", []);
-    return;
-  }
-
-  for (const file of diffFiles) {
-    core.setOutput("diff", file.filename);
-  }
 }
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
