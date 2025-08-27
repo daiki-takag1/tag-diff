@@ -24,6 +24,6 @@ jobs:
           deno-version: v2.x
 
       - name: Get latest release tag
-        run: deno run --allow-env --allow-read --allow-net main.ts
+        run: deno run --allow-env --allow-read --allow-write  --allow-net main.ts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
