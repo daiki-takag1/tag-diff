@@ -1,4 +1,4 @@
-import { getOctokit } from "npm:@actions/github";
+import { getOctokit, context } from "npm:@actions/github";
 import core from "npm:@actions/core";
 
 export async function getLatestReleaseTag() {
@@ -9,7 +9,10 @@ export async function getLatestReleaseTag() {
 
   const github = getOctokit(githubToken);
 
-  const response = await github.rest.repos.getLatestRelease();
+  const response = await github.rest.repos.getLatestRelease({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+  });
 
   core.setOutput("latest_release_tag", response.data.tag_name);
 
