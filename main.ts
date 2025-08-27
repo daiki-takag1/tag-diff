@@ -28,6 +28,8 @@ export async function main() {
 
   const diffFiles = diffResponse.data.files;
 
+  console.log(diffFiles);
+
   if (!diffFiles) {
     core.setOutput("diff", []);
     return;
@@ -40,5 +42,5 @@ export async function main() {
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-  main();
+  await main();
 }
