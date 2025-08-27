@@ -1,7 +1,7 @@
 import { getLatestReleaseTag } from "./get_latest_release_tag.ts";
 
-export function main() {
-  const latestReleaseTag = getLatestReleaseTag();
+export async function main() {
+  const latestReleaseTag = await getLatestReleaseTag();
   console.log(latestReleaseTag);
 }
 
