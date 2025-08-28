@@ -12,10 +12,19 @@ export async function main() {
     repo: context.repo.repo,
   });
 
+  const branchName = `release/${latestRelease.data.tag_name}`;
+
+  await github.rest.git.createRef({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    ref: `refs/heads/${branchName}`,
+    sha: latestRelease.data.target_commitish,
+  });
+
   const pullRequest = await github.rest.pulls.create({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    head: context.sha,
+    head: branchName,
     base: base,
     title: `Release: ${latestRelease.data.name}`,
     body: `Release: ${latestRelease.data.name}`,
