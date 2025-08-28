@@ -1,14 +1,9 @@
-import { getOctokit, context } from "npm:@actions/github";
+import { getOctokit, context } from "@actions/github";
+import core from "@actions/core";
 
 export async function main() {
-  const githubToken = Deno.env.get("GH_TOKEN");
-  if (!githubToken) {
-    throw new Error("GH_TOKEN is not set");
-  }
-  const base = Deno.env.get("BASE");
-  if (!base) {
-    throw new Error("BASE is not set");
-  }
+  const githubToken = core.getInput("GH_TOKEN", { required: true });
+  const base = core.getInput("BASE", { required: true });
 
   const github = getOctokit(githubToken);
 
@@ -22,12 +17,9 @@ export async function main() {
     repo: context.repo.repo,
     base: base,
     head: context.sha,
-    commit_message: `Release: ${latestRelease.data.tag_name} : ${latestRelease.data.name}`,
+    commit_message: `Release: ${latestRelease.data.name}`,
     merge_method: "merge",
   });
 }
 
-// Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
-if (import.meta.main) {
-  await main();
-}
+await main();

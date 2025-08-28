@@ -10,17 +10,7 @@ inputs:
     required: true
 
 runs:
-  using: composite
-  steps:
-    - name: Install Deno
-      uses: denoland/setup-deno@v2
-      with:
-        deno-version: v2.x
+  using: "node20"
+  main: "dist/main.js"
 
-    - name: Run main.ts
-      shell: bash
-      run: deno run --allow-env --allow-read --allow-write  --allow-net .github/actions/merge-release/main.ts
-      env:
-        GH_TOKEN: ${{ inputs.GH_TOKEN }}
-        BASE: ${{ inputs.BASE }}
 
