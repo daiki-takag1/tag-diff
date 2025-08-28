@@ -1,28 +1,19 @@
-name: Deploy
-on:
-  workflow_dispatch:
+name: Merge to production branch on release
 
+on:
   release:
-    types: [published]
+    types:
+      - released
 
 jobs:
-  deploy:
-    name: Deploy
+  merge:
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
 
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-
-      - name: Install Deno
-        uses: denoland/setup-deno@v2
+      - name: Merge
+        uses: ./.github/actions/merge-release/action.yml
         with:
-          deno-version: v2.x
-
-      - name: Run main.ts
-        run: deno run --allow-env --allow-read --allow-write  --allow-net .github/workflows/merge/main.ts
-        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE: "production"
