@@ -31250,10 +31250,17 @@ async function main() {
         owner: githubExports.context.repo.owner,
         repo: githubExports.context.repo.repo,
     });
+    const branchName = `release/${latestRelease.data.tag_name}`;
+    await github.rest.git.createRef({
+        owner: githubExports.context.repo.owner,
+        repo: githubExports.context.repo.repo,
+        ref: `refs/heads/${branchName}`,
+        sha: latestRelease.data.target_commitish,
+    });
     const pullRequest = await github.rest.pulls.create({
         owner: githubExports.context.repo.owner,
         repo: githubExports.context.repo.repo,
-        head: githubExports.context.sha,
+        head: branchName,
         base: base,
         title: `Release: ${latestRelease.data.name}`,
         body: `Release: ${latestRelease.data.name}`,
