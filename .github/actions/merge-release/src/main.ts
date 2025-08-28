@@ -12,14 +12,26 @@ export async function main() {
     repo: context.repo.repo,
   });
 
-  await github.rest.repos.merge({
+  const branchName = `release/${latestRelease.data.tag_name}`;
+
+
+  await github.rest.git.createRef({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    base: base,
-    head: context.sha,
-    commit_message: `Release: ${latestRelease.data.name}`,
-    merge_method: "merge",
+    ref: `refs/heads/${branchName}`,
+    sha: context.sha,
   });
+
+  const pullRequest = await github.rest.pulls.create({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    head: branchName,
+    base: base,
+    title: `Release: ${latestRelease.data.name}`,
+    body: `Release: ${latestRelease.data.name}`,
+  });
+
+  console.log(`Pull request created: ${pullRequest.data.html_url}`);
 }
 
 await main();
