@@ -12,10 +12,9 @@ export async function main() {
 
   const github = getOctokit(githubToken);
 
-  const latestRelease = await github.rest.repos.getReleaseByTag({
+  const latestRelease = await github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    tag: context.ref,
   });
 
   await github.rest.repos.merge({
@@ -23,7 +22,7 @@ export async function main() {
     repo: context.repo.repo,
     base: base,
     head: context.sha,
-    commit_message: `release: ${latestRelease.data.tag_name} : ${latestRelease.data.name}`,
+    commit_message: `Release: ${latestRelease.data.tag_name} : ${latestRelease.data.name}`,
     merge_method: "merge",
   });
 }
