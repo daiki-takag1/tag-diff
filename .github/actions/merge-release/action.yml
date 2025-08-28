@@ -17,9 +17,6 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Install Deno
       uses: denoland/setup-deno@v2
       with:
