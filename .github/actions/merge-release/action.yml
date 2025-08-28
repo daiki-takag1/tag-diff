@@ -25,4 +25,7 @@ runs:
     - name: Run main.ts
       shell: bash
       run: deno run --allow-env --allow-read --allow-write  --allow-net .github/actions/merge-release/main.ts
+      env:
+        GH_TOKEN: ${{ inputs.GH_TOKEN }}
+        BASE: ${{ inputs.BASE }}
 

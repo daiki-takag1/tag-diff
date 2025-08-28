@@ -1,9 +1,14 @@
 import { getOctokit, context } from "npm:@actions/github";
-import core from "npm:@actions/core";
 
 export async function main() {
-  const githubToken = core.getInput("GH_TOKEN", { required: true });
-  const base = core.getInput("BASE", { required: true });
+  const githubToken = Deno.env.get("GH_TOKEN");
+  if (!githubToken) {
+    throw new Error("GH_TOKEN is not set");
+  }
+  const base = Deno.env.get("BASE");
+  if (!base) {
+    throw new Error("BASE is not set");
+  }
 
   const github = getOctokit(githubToken);
 
