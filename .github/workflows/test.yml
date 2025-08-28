@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write # Needed for auth with Deno Deploy
-      contents: write # Needed to clone the repository
+      contents: write
 
     steps:
       - name: Clone repository
@@ -24,6 +23,6 @@ jobs:
           deno-version: v2.x
 
       - name: Run main.ts
-        run: deno run --allow-env --allow-read --allow-write  --allow-net main.ts
+        run: deno run --allow-env --allow-read --allow-write  --allow-net .github/workflows/merge/main.ts
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
