@@ -12,14 +12,16 @@ export async function main() {
     repo: context.repo.repo,
   });
 
-  await github.rest.repos.merge({
+  const pullRequest = await github.rest.pulls.create({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    base: base,
     head: context.sha,
-    commit_message: `Release: ${latestRelease.data.name}`,
-    merge_method: "merge",
+    base: base,
+    title: `Release: ${latestRelease.data.name}`,
+    body: `Release: ${latestRelease.data.name}`,
   });
+
+  console.log(`Pull request created: ${pullRequest.data.html_url}`);
 }
 
 await main();
