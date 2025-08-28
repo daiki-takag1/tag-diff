@@ -5,9 +5,12 @@ export async function main() {
   if (!githubToken) {
     throw new Error("GH_TOKEN is not set");
   }
+  const base = Deno.env.get("BASE");
+  if (!base) {
+    throw new Error("BASE is not set");
+  }
 
   const github = getOctokit(githubToken);
-
 
   const latestRelease = await github.rest.repos.getLatestRelease({
     owner: context.repo.owner,
@@ -17,9 +20,9 @@ export async function main() {
   await github.rest.repos.merge({
     owner: context.repo.owner,
     repo: context.repo.repo,
-    base: "production",
+    base: base,
     head: context.sha,
-    commit_message: `release: ${latestRelease.data.tag_name} : ${latestRelease.data.name}`,
+    commit_message: `Release: ${latestRelease.data.tag_name} : ${latestRelease.data.name}`,
     merge_method: "merge",
   });
 }
