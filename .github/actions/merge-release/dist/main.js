@@ -31255,7 +31255,7 @@ async function main() {
         owner: githubExports.context.repo.owner,
         repo: githubExports.context.repo.repo,
         ref: `refs/heads/${branchName}`,
-        sha: latestRelease.data.target_commitish,
+        sha: githubExports.context.sha,
     });
     const pullRequest = await github.rest.pulls.create({
         owner: githubExports.context.repo.owner,

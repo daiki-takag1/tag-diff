@@ -19,7 +19,7 @@ export async function main() {
     owner: context.repo.owner,
     repo: context.repo.repo,
     ref: `refs/heads/${branchName}`,
-    sha: latestRelease.data.target_commitish,
+    sha: context.sha,
   });
 
   const pullRequest = await github.rest.pulls.create({
